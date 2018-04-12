@@ -13,7 +13,8 @@ node {
     env.BUILDIMG=imageName
 
     stage "Build"
-    
+
+        sh "gcloud --help"    
         sh "docker build -t ${imageName} ."
     
     stage "Push"
@@ -21,8 +22,6 @@ node {
         sh "docker push ${imageName}"
 
     stage "Deploy"
-
-        sh "gcloud --help"
 
         sh "sed 's#gcr.io/inspiring-folio-200821/hosting_test:latest#'$BUILDIMG'#' deployment.yaml | kubectl apply -f -"
         sh "kubectl rollout status deployment/hello-node-deployment"
